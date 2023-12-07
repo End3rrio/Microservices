@@ -1,4 +1,4 @@
-package ru.maycode.ses.client.config;
+package org.example.client.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

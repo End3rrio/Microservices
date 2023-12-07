@@ -1,36 +1,70 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.springframework.boot' version '2.7.6'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+/**
+ * General dependencies to all modules
+ */
+subprojects {
 
-java {
-	sourceCompatibility = '17'
-}
+	apply plugin: 'java'
+	apply plugin: 'java-library'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+	configurations {
+		provided
 	}
-}
 
-repositories {
-	mavenCentral()
-}
+	sourceSets {
+		main.compileClasspath += configurations.provided
+		test.compileClasspath += configurations.provided
+		test.runtimeClasspath += configurations.provided
+	}
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-}
+	group 'com.example'
 
-tasks.named('test') {
-	useJUnitPlatform()
+	version '1.0'
+
+	sourceCompatibility = JavaVersion.VERSION_17
+
+	jar {
+		enabled = true
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	/**
+	 * Lombok
+	 */
+	dependencies {
+		compileOnly 'org.projectlombok:lombok:1.18.24'
+		testCompileOnly 'org.projectlombok:lombok:1.18.24'
+		annotationProcessor 'org.projectlombok:lombok:1.18.24'
+		testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+	}
+
+	/**
+	 * Logging
+	 */
+	dependencies {
+		implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'
+		implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.18.0'
+	}
+
+	/**
+	 * Test
+	 */
+	dependencies {
+		testImplementation group: 'org.springframework.security', name: 'spring-security-test'
+		testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+		testImplementation group: 'com.h2database', name: 'h2'
+	}
 }
